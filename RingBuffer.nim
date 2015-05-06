@@ -2,18 +2,24 @@ import macros
 
 type
   RingBuffer*[T] = object
+    ## A ring buffer is a sequence-like type which can store
+    ## up to `length` elements. After `length` elements are
+    ## added to the buffer, new items will begin to replace
+    ## the oldest ones (i.e. the elements at the start of the
+    ## buffer).
     data*: seq[T]
+    # indicates where elements should be positioned in data
     first*, last*: int
-    size*: int
-    length*: int
+    size*, length*: int
 
-template adjustFirstIndex(b: expr): stmt  =  
+template adjustFirstIndex(b: expr): stmt =  
   b.first = (b.length + b.last - b.size + 1) mod b.length;
 
-template adjustLastIndex(b, change: expr): stmt  =  
+template adjustLastIndex(b, change: expr): stmt =  
   b.last = (b.last + change) mod b.length
 
 proc newRingBuffer*[T](length: int): RingBuffer[T] =
+  ## Construct a new Ringbuffer which can hold up to `length` elements
   let s = newSeq[T](length)
   RingBuffer[T](data: s, first: 0, last: -1, size: 0, length: length)
 
@@ -94,4 +100,4 @@ proc find*[T](b: RingBuffer[T], val: T): int =
     if v == val: return i
   return -1
 
-proc contains*[T](b: RingBuffer[T], val: T): bool = b.find(val) != -1
+proc `contains`*[T](b: RingBuffer[T], val: T): bool = b.find(val) != -1

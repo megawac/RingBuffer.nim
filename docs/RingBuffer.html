@@ -1234,7 +1234,7 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
   <span class="Identifier">length</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
 <dd>
-
+A ring buffer is a sequence-like type which can store up to <cite>length</cite> elements. After <cite>length</cite> elements are added to the buffer, new items will begin to replace the oldest ones (i.e. the elements at the start of the buffer).
 
 </dd>
 
@@ -1244,7 +1244,7 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
 <dl class="item">
 <dt id="newRingBuffer"><a name="newRingBuffer,int"></a><pre><span class="Keyword">proc</span> <span class="Identifier">newRingBuffer</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">length</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
 <dd>
-
+Construct a new Ringbuffer which can hold up to <cite>length</cite> elements
 
 </dd>
 <dt id="[]"><a name="[],RingBuffer[T],int"></a><pre><span class="Keyword">proc</span> <span class="Other">`</span><span class="Operator">[]</span><span class="Other">`</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">idx</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
@@ -1332,7 +1332,7 @@ Find the first index of a value or -1
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small>Made with Nim. Generated: 2015-05-06 09:43:15 UTC</small>
+        <small>Made with Nim. Generated: 2015-05-06 12:13:31 UTC</small>
       </div>
     </div>
   </div>
