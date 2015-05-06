@@ -53,19 +53,6 @@ proc `@`*[T](b: RingBuffer[T]): seq[T] =
 
 converter toSeq*[T](b: RingBuffer[T]): seq[T] = @b
 
-# Inheritted
-# - find
-# - contains
-# - slice?
-# - map?
-# - filter?
-# - max?
-# - min?
-
-proc isFull*(b: RingBuffer): bool =
-  ## Is the buffer at capacity (pushes will overwrite)
-  b.size == b.length
-
 proc add*[T](b: var RingBuffer[T], item: T) =
   ## Add an element to the buffer 
   adjustTail(b, 1)
@@ -88,10 +75,22 @@ proc pop*[T](b: var RingBuffer[T]): T =
   b.size -= 1
   adjustHead(b)
 
+proc isFull*(b: RingBuffer): bool =
+  ## Is the buffer at capacity (pushes will overwrite)
+  b.size == b.length
+
 discard """
   Reimplement some of the sequence utility functions
   TODO: remove these when http://stackoverflow.com/q/30035574/1517919
   is fixed
+
+  TODOs
+  - sortedFindIndex?
+  - slice?
+  - map?
+  - filter?
+  - max?
+  - min?
 """
 
 proc find*[T](b: RingBuffer[T], val: T): int =
