@@ -1160,10 +1160,9 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#RingBuffer"
     title="RingBuffer*[T] = object 
-  data*: seq[T]
-  first*, last*: int
-  size*: int
-  length*: int"><wbr />Ring<wbr />Buffer</a></li>
+  data: seq[T]
+  head, tail: int
+  size, length*: int"><wbr />Ring<wbr />Buffer</a></li>
 
   </ul>
 </li>
@@ -1191,7 +1190,7 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
   <li><a class="reference" href="#find,RingBuffer[T],T"
     title="find*[T](b: RingBuffer[T]; val: T): int"><wbr />find</a></li>
   <li><a class="reference" href="#contains,RingBuffer[T],T"
-    title="contains*[T](b: RingBuffer[T]; val: T): bool"><wbr />contains</a></li>
+    title="`contains`*[T](b: RingBuffer[T]; val: T): bool">`<wbr />contains`</a></li>
 
   </ul>
 </li>
@@ -1228,10 +1227,9 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
 <dt id="RingBuffer"><a name="RingBuffer"></a><pre><span class="Identifier">RingBuffer</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">object</span> 
-  <span class="Identifier">data</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span>
-  <span class="Identifier">first</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">last</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">size</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">length</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">data</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span>
+  <span class="Identifier">head</span><span class="Other">,</span> <span class="Identifier">tail</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">size</span><span class="Other">,</span> <span class="Identifier">length</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
 <dd>
 A ring buffer is a sequence-like type which can store up to <cite>length</cite> elements. After <cite>length</cite> elements are added to the buffer, new items will begin to replace the oldest ones (i.e. the elements at the start of the buffer).
@@ -1292,7 +1290,7 @@ Remove an element from the buffer and return it
 Find the first index of a value or -1
 
 </dd>
-<dt id="contains"><a name="contains,RingBuffer[T],T"></a><pre><span class="Keyword">proc</span> <span class="Identifier">contains</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
+<dt id="contains"><a name="contains,RingBuffer[T],T"></a><pre><span class="Keyword">proc</span> <span class="Other">`</span><span class="Identifier">contains</span><span class="Other">`</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
 <dd>
 
 
@@ -1332,7 +1330,7 @@ Find the first index of a value or -1
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small>Made with Nim. Generated: 2015-05-06 12:13:31 UTC</small>
+        <small>Made with Nim. Generated: 2015-05-06 12:28:40 UTC</small>
       </div>
     </div>
   </div>

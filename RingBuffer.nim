@@ -7,32 +7,32 @@ type
     ## added to the buffer, new items will begin to replace
     ## the oldest ones (i.e. the elements at the start of the
     ## buffer).
-    data*: seq[T]
+    data: seq[T]
     # indicates where elements should be positioned in data
-    first*, last*: int
-    size*, length*: int
+    head, tail: int
+    size, length*: int
 
-template adjustFirstIndex(b: expr): stmt =  
-  b.first = (b.length + b.last - b.size + 1) mod b.length;
+template adjustHead(b: expr): stmt =  
+  b.head = (b.length + b.tail - b.size + 1) mod b.length;
 
-template adjustLastIndex(b, change: expr): stmt =  
-  b.last = (b.last + change) mod b.length
+template adjustTail(b, change: expr): stmt =  
+  b.tail = (b.tail + change) mod b.length
 
 proc newRingBuffer*[T](length: int): RingBuffer[T] =
   ## Construct a new Ringbuffer which can hold up to `length` elements
   let s = newSeq[T](length)
-  RingBuffer[T](data: s, first: 0, last: -1, size: 0, length: length)
+  RingBuffer[T](data: s, head: 0, tail: -1, size: 0, length: length)
 
 proc `[]`*[T](b: RingBuffer[T], idx: int): T {.inline} =
   ## Get an item at index (adjusted)
-  b.data[(idx + b.first) mod b.length]
+  b.data[(idx + b.head) mod b.length]
 
 proc `[]=`*[T](b: var RingBuffer[T], idx: int, item: T) {.raises: [IndexError].} =
   ## Set an item at index (adjusted)
   if idx == b.size: inc(b.size)
   elif idx > b.size: raise newException(IndexError, "Index " & $idx & " out of bound")
 
-  b.data[(idx + b.first) mod b.length] = item
+  b.data[(idx + b.head) mod b.length] = item
 
 proc len*(b: RingBuffer): int = b.size
 
@@ -68,25 +68,25 @@ proc isFull*(b: RingBuffer): bool =
 
 proc add*[T](b: var RingBuffer[T], item: T) =
   ## Add an element to the buffer 
-  adjustLastIndex(b, 1)
-  b.data[b.last] = item
+  adjustTail(b, 1)
+  b.data[b.tail] = item
   b.size = min(b.size + 1, b.length)
-  adjustFirstIndex(b)
+  adjustHead(b)
 
 proc add*[T](b: var RingBuffer[T], data: openArray[T]) =
   ## Add elements to the buffer 
   for item in data:
-    adjustLastIndex(b, 1)
-    b.data[b.last] = item
+    adjustTail(b, 1)
+    b.data[b.tail] = item
   b.size = min(b.size + len(data), b.length)
-  adjustFirstIndex(b)
+  adjustHead(b)
 
 proc pop*[T](b: var RingBuffer[T]): T =
   ## Remove an element from the buffer and return it
-  result = b.data[b.last] # Note: will throw error if oob
-  adjustLastIndex(b, -1)
+  result = b.data[b.tail] # Note: will throw error if oob
+  adjustTail(b, -1)
   b.size -= 1
-  adjustFirstIndex(b)
+  adjustHead(b)
 
 discard """
   Reimplement some of the sequence utility functions

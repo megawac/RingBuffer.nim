@@ -33,17 +33,16 @@ suite "Adding":
 
   test "Circular add":
     buffer.add(4)
-    check buffer.data[0] == 4
+    check buffer[0] == 2
     buffer.add(5)
     buffer.add(6)
-    check buffer.data[1] == 5
-    check buffer.data[2] == 6
+    let s = @buffer
+    check s == @[4, 5, 6]
 
   test "Circular openArray add":
     buffer.add([7, 8])
-    check buffer.data[0] == 7
-    check buffer.data[1] == 8
-    check buffer.data[2] == 6
+    let s = @buffer
+    check s == @[6, 7, 8]
 
   test "Maintains correct size & length":
     check buffer.len == 3
