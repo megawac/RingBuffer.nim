@@ -55,6 +55,13 @@ suite "Adding":
     let s = @buffer
     check s == @[6, 7]
 
+  test "Empty":
+    buffer.empty
+    check buffer.len == 0
+    buffer.add(1)
+    let s = @buffer
+    check s == @[1]
+
 import sequtils
 
 suite "Sequence utilities":
@@ -77,4 +84,21 @@ suite "Sequence utilities":
     check contained == false
     contained = 5 in buffer
     check contained == true
+
+import algorithm
+
+suite "Rearrangement":
+  buffer = newRingBuffer[int](5)
+  buffer.add([2, 1, 3, 5])
+  buffer.add([4, 2])
+
+  test "Sort Ascending":
+    buffer.sort(system.cmp)
+    let s = @buffer
+    check s == @[1, 2, 3, 4, 5]
+
+  test "Sort Descending":
+    buffer.sort(system.cmp, Descending)
+    let s = @buffer
+    check s == @[5, 4, 3, 2, 1]
 

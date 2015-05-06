@@ -19,7 +19,13 @@ template adjustTail(b, change: expr): stmt =
   b.tail = (b.tail + change) mod b.length
 
 proc newRingBuffer*[T](length: int): RingBuffer[T] =
-  ## Construct a new Ringbuffer which can hold up to `length` elements
+  ## Construct a new RingBuffer which can hold up to `length` elements
+  ## ::
+  ##   var b = newRingBuffer[int](5)
+  ##   b.add([1, 2, 3, 4, 5])
+  ##   b.add(6)
+  ##   b.add([7, 8])
+  ##   @b == [4, 5, 6, 7, 8]  
   let s = newSeq[T](length)
   RingBuffer[T](data: s, head: 0, tail: -1, size: 0, length: length)
 
@@ -44,12 +50,18 @@ iterator `pairs`*[T](b: RingBuffer[T]): tuple[a: int, b: T] =
   for i in 0..b.size - 1:
     yield (i, b[i])
 
+proc slice*[T](b: RingBuffer[T], s = 0, e = 500): seq[T] =
+  ## Create a subsequence of the buffer from elements s to e
+  ## Creates a sequence of the entire collection by default.
+  result = newSeq[T](e - s)
+  var i = 0
+  while s + i < e:
+    result[i] = b[s + i]
+    inc(i)
+
 proc `@`*[T](b: RingBuffer[T]): seq[T] =
   ## Convert the buffer to a sequence
-  var s = newSeq[T](b.size)
-  for i, item in b:
-    s[i] = item
-  result = s
+  b.slice(0, b.size)
 
 converter toSeq*[T](b: RingBuffer[T]): seq[T] = @b
 
@@ -76,7 +88,7 @@ proc pop*[T](b: var RingBuffer[T]): T =
   adjustHead(b)
 
 proc isFull*(b: RingBuffer): bool =
-  ## Is the buffer at capacity (pushes will overwrite)
+  ## Is the buffer at capacity (add will overwrite another element)
   b.size == b.length
 
 discard """
@@ -99,4 +111,21 @@ proc find*[T](b: RingBuffer[T], val: T): int =
     if v == val: return i
   return -1
 
-proc `contains`*[T](b: RingBuffer[T], val: T): bool = b.find(val) != -1
+proc `contains`*[T](b: RingBuffer[T], val: T): bool =
+  ## Check if the buffer contains a given value
+  b.find(val) != -1
+
+import algorithm
+proc sort*[T](b: var RingBuffer[T],
+              cmp: proc (x, y: T): int {.closure.},
+              order = SortOrder.Ascending) =
+  ## Sort the buffer using a compare function
+  sort(b.data, cmp, order)
+  b.head = 0
+  b.tail = b.size - 1
+
+proc empty*[T](b: var RingBuffer[T]) =
+  ## Mark the buffer as empty (len=0)
+  b.head = 0
+  b.tail = 0
+  b.size = 0

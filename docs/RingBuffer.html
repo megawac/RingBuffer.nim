@@ -1177,20 +1177,27 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
     title="`[]=`*[T](b: var RingBuffer[T]; idx: int; item: T)">`<wbr />[]=`</a></li>
   <li><a class="reference" href="#len,RingBuffer"
     title="len*(b: RingBuffer): int"><wbr />len</a></li>
+  <li><a class="reference" href="#slice,RingBuffer[T]"
+    title="slice*[T](b: RingBuffer[T]; s = 0; e = 500): seq[T]"><wbr />slice</a></li>
   <li><a class="reference" href="#@,RingBuffer[T]"
     title="`@`*[T](b: RingBuffer[T]): seq[T]">`<wbr />@`</a></li>
-  <li><a class="reference" href="#isFull,RingBuffer"
-    title="isFull*(b: RingBuffer): bool"><wbr />is<wbr />Full</a></li>
   <li><a class="reference" href="#add,RingBuffer[T],T"
     title="add*[T](b: var RingBuffer[T]; item: T)"><wbr />add</a></li>
   <li><a class="reference" href="#add,RingBuffer[T],openArray[T]"
     title="add*[T](b: var RingBuffer[T]; data: openArray[T])"><wbr />add</a></li>
   <li><a class="reference" href="#pop,RingBuffer[T]"
     title="pop*[T](b: var RingBuffer[T]): T"><wbr />pop</a></li>
+  <li><a class="reference" href="#isFull,RingBuffer"
+    title="isFull*(b: RingBuffer): bool"><wbr />is<wbr />Full</a></li>
   <li><a class="reference" href="#find,RingBuffer[T],T"
     title="find*[T](b: RingBuffer[T]; val: T): int"><wbr />find</a></li>
   <li><a class="reference" href="#contains,RingBuffer[T],T"
     title="`contains`*[T](b: RingBuffer[T]; val: T): bool">`<wbr />contains`</a></li>
+  <li><a class="reference" href="#sort,RingBuffer[T],proc(T,T)"
+    title="sort*[T](b: var RingBuffer[T]; cmp: proc (x, y: T): int; 
+         order = SortOrder.Ascending)"><wbr />sort</a></li>
+  <li><a class="reference" href="#empty,RingBuffer[T]"
+    title="empty*[T](b: var RingBuffer[T])"><wbr />empty</a></li>
 
   </ul>
 </li>
@@ -1221,7 +1228,7 @@ dt pre > span.Operator ~ span.Identifier, dt pre > span.Operator ~ span.Operator
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="macros.html">macros</a>
+<a class="reference external" href="macros.html">macros</a>, <a class="reference external" href="algorithm.html">algorithm</a>
 </dl></div>
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
@@ -1242,7 +1249,12 @@ A ring buffer is a sequence-like type which can store up to <cite>length</cite> 
 <dl class="item">
 <dt id="newRingBuffer"><a name="newRingBuffer,int"></a><pre><span class="Keyword">proc</span> <span class="Identifier">newRingBuffer</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">length</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
 <dd>
-Construct a new Ringbuffer which can hold up to <cite>length</cite> elements
+Construct a new RingBuffer which can hold up to <cite>length</cite> elements<pre>var b = newRingBuffer[int](5)
+b.add([1, 2, 3, 4, 5])
+b.add(6)
+b.add([7, 8])
+@b == [4, 5, 6, 7, 8]  </pre>
+
 
 </dd>
 <dt id="[]"><a name="[],RingBuffer[T],int"></a><pre><span class="Keyword">proc</span> <span class="Other">`</span><span class="Operator">[]</span><span class="Other">`</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">idx</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span> <span class="Other">{.</span><span class="Identifier">inline</span><span class="Other">.}</span></pre></dt>
@@ -1260,14 +1272,14 @@ Set an item at index (adjusted)
 
 
 </dd>
+<dt id="slice"><a name="slice,RingBuffer[T]"></a><pre><span class="Keyword">proc</span> <span class="Identifier">slice</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">s</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">e</span> <span class="Other">=</span> <span class="DecNumber">500</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+Create a subsequence of the buffer from elements s to e Creates a sequence of the entire collection by default.
+
+</dd>
 <dt id="@"><a name="@,RingBuffer[T]"></a><pre><span class="Keyword">proc</span> <span class="Other">`</span><span class="Operator">@</span><span class="Other">`</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
 <dd>
 Convert the buffer to a sequence
-
-</dd>
-<dt id="isFull"><a name="isFull,RingBuffer"></a><pre><span class="Keyword">proc</span> <span class="Identifier">isFull</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
-<dd>
-Is the buffer at capacity (pushes will overwrite)
 
 </dd>
 <dt id="add"><a name="add,RingBuffer[T],T"></a><pre><span class="Keyword">proc</span> <span class="Identifier">add</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">item</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
@@ -1285,6 +1297,11 @@ Add elements to the buffer
 Remove an element from the buffer and return it
 
 </dd>
+<dt id="isFull"><a name="isFull,RingBuffer"></a><pre><span class="Keyword">proc</span> <span class="Identifier">isFull</span><span class="Operator">*</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
+<dd>
+Is the buffer at capacity (add will overwrite another element)
+
+</dd>
 <dt id="find"><a name="find,RingBuffer[T],T"></a><pre><span class="Keyword">proc</span> <span class="Identifier">find</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span></pre></dt>
 <dd>
 Find the first index of a value or -1
@@ -1292,7 +1309,18 @@ Find the first index of a value or -1
 </dd>
 <dt id="contains"><a name="contains,RingBuffer[T],T"></a><pre><span class="Keyword">proc</span> <span class="Other">`</span><span class="Identifier">contains</span><span class="Other">`</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
 <dd>
+Check if the buffer contains a given value
 
+</dd>
+<dt id="sort"><a name="sort,RingBuffer[T],proc(T,T)"></a><pre><span class="Keyword">proc</span> <span class="Identifier">sort</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">cmp</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">{.</span><span class="Identifier">closure</span><span class="Other">.}</span><span class="Other">;</span> 
+              <span class="Identifier">order</span> <span class="Other">=</span> <span class="Identifier">SortOrder</span><span class="Other">.</span><span class="Identifier">Ascending</span><span class="Other">)</span></pre></dt>
+<dd>
+Sort the buffer using a compare function
+
+</dd>
+<dt id="empty"><a name="empty,RingBuffer[T]"></a><pre><span class="Keyword">proc</span> <span class="Identifier">empty</span><span class="Operator">*</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">RingBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<dd>
+Mark the buffer as empty (len=0)
 
 </dd>
 
@@ -1330,7 +1358,7 @@ Find the first index of a value or -1
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small>Made with Nim. Generated: 2015-05-06 12:28:40 UTC</small>
+        <small>Made with Nim. Generated: 2015-05-06 17:39:57 UTC</small>
       </div>
     </div>
   </div>

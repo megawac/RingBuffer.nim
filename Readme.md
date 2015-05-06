@@ -7,3 +7,15 @@
 > [Wikipedia](http://en.wikipedia.org/wiki/Circular_buffer)
 
 ![](http://www.boost.org/doc/libs/1_58_0/libs/circular_buffer/doc/images/circular_buffer.png)
+
+#### Usage
+
+```nim
+var b = newRingBuffer[int](5)
+
+b.add([1, 2, 3, 4, 5])
+b.add(6)
+b.add([7, 8])
+
+@b == [4, 5, 6, 7, 8]
+```
