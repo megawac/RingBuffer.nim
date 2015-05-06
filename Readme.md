@@ -1,3 +1,4 @@
-Nimrod implementation of RingBuffers/Circular buffers
+### Nim implementation of Circular buffers [![Build Status](https://travis-ci.org/megawac/RingBuffer.nim.svg)](https://travis-ci.org/megawac/RingBuffer.nim)
 
-See [docs](http://rawgit.com/megawac/RingBuffer.nim/master/docs/RingBuffer.html)
+
+[**Documentation**](http://rawgit.com/megawac/RingBuffer.nim/master/docs/RingBuffer.html)
