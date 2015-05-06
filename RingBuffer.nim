@@ -50,9 +50,13 @@ iterator `pairs`*[T](b: RingBuffer[T]): tuple[a: int, b: T] =
   for i in 0..b.size - 1:
     yield (i, b[i])
 
-proc slice*[T](b: RingBuffer[T], s = 0, e = 500): seq[T] =
+const MAX_INT = high(int)
+proc slice*[T](b: RingBuffer[T], s = 0, e1 = MAX_INT): seq[T] =
   ## Create a subsequence of the buffer from elements s to e
   ## Creates a sequence of the entire collection by default.
+  var e = e1
+  if e > b.size:
+    e = b.size
   result = newSeq[T](e - s)
   var i = 0
   while s + i < e:

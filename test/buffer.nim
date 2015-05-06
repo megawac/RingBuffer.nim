@@ -48,6 +48,18 @@ suite "Adding":
     check buffer.len == 3
     check buffer.length == 3
 
+  test "Slice (no params)":
+    let s = buffer.slice
+    check s == @[6, 7, 8]
+
+  test "Slice (start param)":
+    let s = buffer.slice(1)
+    check s == @[7, 8]
+
+  test "Slice (end param)":
+    let s = buffer.slice(0, 2)
+    check s == @[6, 7]
+
   test "Popping":
     let r = buffer.pop()
     check r == 8
@@ -101,4 +113,3 @@ suite "Rearrangement":
     buffer.sort(system.cmp, Descending)
     let s = @buffer
     check s == @[5, 4, 3, 2, 1]
-
