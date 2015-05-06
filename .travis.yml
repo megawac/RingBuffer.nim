@@ -1,0 +1,22 @@
+language: C
+compiler:
+  - gcc
+before_install:
+  # Install nim
+  - ls
+  - git clone -b master git://github.com/Araq/Nim.git --depth 1 ~/Nim
+  - git clone -b master --depth 1 git://github.com/nim-lang/csources ~/Nim/csources
+  - (cd ~/Nim/csources && sh build.sh)
+  - (cd ~/Nim && ~/Nim/bin/nim c koch)
+  - (cd ~/Nim && ~/Nim/koch boot -d:release)
+  - echo 'export PATH=~/Nim/bin:$PATH' >> ~/.profile
+  # Install nimble
+  - source ~/.profile
+  - git clone https://github.com/nim-lang/nimble.git --depth 1 ~/nimble
+  - (cd ~/nimble && nim c -r src/nimble install)
+  - echo 'export PATH=~/nimble/bin:$PATH' >> ~/.profile
+install:
+  - source ~/.profile
+  # - nimble build
+script:
+  - nim compile --run test/*
