@@ -12,10 +12,10 @@ type
     head, tail: int
     size, length*: int
 
-template adjustHead(b: expr): stmt =  
+template adjustHead(b: untyped): typed =
   b.head = (b.length + b.tail - b.size + 1) mod b.length;
 
-template adjustTail(b, change: expr): stmt =  
+template adjustTail(b, change: untyped): typed =
   b.tail = (b.tail + change) mod b.length
 
 proc newRingBuffer*[T](length: int): RingBuffer[T] =
