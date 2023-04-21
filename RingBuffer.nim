@@ -70,22 +70,28 @@ proc `@`*[T](b: RingBuffer[T]): seq[T] =
 converter toSeq*[T](b: RingBuffer[T]): seq[T] = @b
 
 proc add*[T](b: var RingBuffer[T], item: T) =
-  ## Add an element to the buffer 
+  ## Add an element to the buffer
   adjustTail(b, 1)
   b.data[b.tail] = item
   b.size = min(b.size + 1, b.length)
   adjustHead(b)
 
 proc add*[T](b: var RingBuffer[T], data: openArray[T]) =
-  ## Add elements to the buffer 
+  ## Add elements to the buffer
   for item in data:
     adjustTail(b, 1)
     b.data[b.tail] = item
   b.size = min(b.size + len(data), b.length)
   adjustHead(b)
 
+proc remove*[T](b: var RingBuffer[T]): T =
+  ## Remove the oldest element from the buffer and return it
+  result = b.data[b.head] # Note: will throw error if oob
+  b.size -= 1
+  adjustHead(b)
+
 proc pop*[T](b: var RingBuffer[T]): T =
-  ## Remove an element from the buffer and return it
+  ## Remove the youngest element from the buffer and return it
   result = b.data[b.tail] # Note: will throw error if oob
   adjustTail(b, -1)
   b.size -= 1
