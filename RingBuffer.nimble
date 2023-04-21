@@ -1,9 +1,12 @@
-[Package]
-name          = "RingBuffer"
-version       = "0.1.3"
+# Package
+version       = "0.1.2"
 author        = "Graeme Yeates"
 description   = "Circular buffer implementation"
 license       = "MIT"
 
-[Deps]
-Requires: "nim >= 0.10.0"
+# Dependencies
+requires "nim >= 0.10.0"
+
+# Tasks
+task test, "Runs the test suite":
+  exec "nim c -r -f test/buffer.nim"
