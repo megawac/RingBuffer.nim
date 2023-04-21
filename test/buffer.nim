@@ -60,12 +60,19 @@ suite "Adding":
     let s = buffer.slice(0, 2)
     check s == @[6, 7]
 
+  test "Removing":
+    let r = buffer.remove()
+    check r == 6
+    check buffer.len == 2
+    let s = @buffer
+    check s == @[7, 8]
+
   test "Popping":
     let r = buffer.pop()
     check r == 8
-    check buffer.len == 2
+    check buffer.len == 1
     let s = @buffer
-    check s == @[6, 7]
+    check s == @[7]
 
   test "Empty":
     buffer.empty
